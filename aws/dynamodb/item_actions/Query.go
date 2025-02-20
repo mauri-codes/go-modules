@@ -2,13 +2,13 @@ package item_actions
 
 import (
 	"context"
-	"dynamodb/definitions"
 	"log"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/mauri-codes/go-modules/aws/dynamodb/definitions"
 )
 
 func Query[T any](table *definitions.Table, action definitions.IItemAction[T]) ([]T, error) {

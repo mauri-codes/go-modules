@@ -2,13 +2,13 @@ package item_actions
 
 import (
 	"context"
-	"dynamodb/definitions"
 	"log"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/mauri-codes/go-modules/aws/dynamodb/definitions"
 )
 
 func UpdateItem[T any](table *definitions.Table, action definitions.IItemAction[T]) error {
