@@ -1,4 +1,4 @@
-module github.com/mauri-codes/go-modules/aws/dynamodb_x
+module dynamodb
 
 go 1.23.2
 
