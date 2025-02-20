@@ -1,4 +1,4 @@
-package item_actions
+package dynamo
 
 import (
 	"context"
@@ -8,14 +8,13 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
-	"github.com/mauri-codes/go-modules/aws/dynamodb/definitions"
 )
 
-func Query[T any](table *definitions.Table, action definitions.IItemAction[T]) ([]T, error) {
+func Query[T any](table *Table, action IItemAction[T]) ([]T, error) {
 	client := table.Client
 	hash := expression.Key(table.HashKey).Equal(expression.Value(action.GetHashKeyValue()))
 	var sort expression.KeyConditionBuilder
-	if action.GetSortKeyAction() == definitions.BEGINS_WITH {
+	if action.GetSortKeyAction() == BEGINS_WITH {
 		sort = expression.Key(table.SortKey).BeginsWith(action.GetSortKeyValue())
 	} else {
 		sort = expression.Key(table.SortKey).Equal(expression.Value(action.GetSortKeyValue()))

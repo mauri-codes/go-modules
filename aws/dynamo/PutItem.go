@@ -1,4 +1,4 @@
-package item_actions
+package dynamo
 
 import (
 	"context"
@@ -7,10 +7,9 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
-	"github.com/mauri-codes/go-modules/aws/dynamodb/definitions"
 )
 
-func PutItem[T any](table *definitions.Table, action definitions.IItemAction[T]) error {
+func PutItem[T any](table *Table, action IItemAction[T]) error {
 	client := table.Client
 	item, err := attributevalue.MarshalMap(action.GetData())
 	if err != nil {

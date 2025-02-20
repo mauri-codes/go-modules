@@ -1,4 +1,4 @@
-package definitions
+package dynamo
 
 import (
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
@@ -65,7 +65,22 @@ func NewPutItem[T any](hashKey string, sortKey string, data T) IItemAction[T] {
 	}
 }
 
+func NewUpdateItem[T any](hashKey string, sortKey string, expression expression.Expression) IItemAction[T] {
+	return &ItemAction[T]{
+		HashKeyValue: hashKey,
+		SortKeyValue: sortKey,
+		Expression:   expression,
+	}
+}
+
 func NewQuery[T any](hashKey string, sortKey string) IItemAction[T] {
+	return &ItemAction[T]{
+		HashKeyValue: hashKey,
+		SortKeyValue: sortKey,
+	}
+}
+
+func NewGetItem[T any](hashKey string, sortKey string) IItemAction[T] {
 	return &ItemAction[T]{
 		HashKeyValue: hashKey,
 		SortKeyValue: sortKey,

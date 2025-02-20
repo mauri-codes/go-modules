@@ -1,4 +1,4 @@
-package item_actions
+package dynamo
 
 import (
 	"context"
@@ -8,10 +8,9 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
-	"github.com/mauri-codes/go-modules/aws/dynamodb/definitions"
 )
 
-func GetItem[T any](table *definitions.Table, action definitions.IItemAction[T]) (T, error) {
+func GetItem[T any](table *Table, action IItemAction[T]) (T, error) {
 	client := table.Client
 	var item T
 	var itemKeys map[string]types.AttributeValue
