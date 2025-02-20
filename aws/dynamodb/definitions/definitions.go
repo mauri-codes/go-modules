@@ -12,6 +12,15 @@ type Table struct {
 	Client    *dynamodb.Client
 }
 
+func NewTable(name string, hashKey string, sortKey string, client *dynamodb.Client) *Table {
+	return &Table{
+		TableName: name,
+		HashKey:   hashKey,
+		SortKey:   sortKey,
+		Client:    client,
+	}
+}
+
 type ItemAction[T any] struct {
 	HashKeyValue  string
 	SortKeyValue  string
