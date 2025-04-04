@@ -73,10 +73,11 @@ func NewUpdateItem[T any](hashKey string, sortKey string, expression expression.
 	}
 }
 
-func NewQuery[T any](hashKey string, sortKey string) IItemAction[T] {
+func NewQuery[T any](hashKey string, sortKey string, action string) IItemAction[T] {
 	return &ItemAction[T]{
-		HashKeyValue: hashKey,
-		SortKeyValue: sortKey,
+		HashKeyValue:  hashKey,
+		SortKeyValue:  sortKey,
+		SortKeyAction: action,
 	}
 }
 

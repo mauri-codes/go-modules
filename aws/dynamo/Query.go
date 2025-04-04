@@ -13,13 +13,19 @@ import (
 func Query[T any](table *Table, action IItemAction[T]) ([]T, error) {
 	client := table.Client
 	hash := expression.Key(table.HashKey).Equal(expression.Value(action.GetHashKeyValue()))
-	var sort expression.KeyConditionBuilder
-	if action.GetSortKeyAction() == BEGINS_WITH {
-		sort = expression.Key(table.SortKey).BeginsWith(action.GetSortKeyValue())
+	var expr expression.Expression
+	var err error
+	if action.GetSortKeyValue() != "" {
+		var sort expression.KeyConditionBuilder
+		if action.GetSortKeyAction() == BEGINS_WITH {
+			sort = expression.Key(table.SortKey).BeginsWith(action.GetSortKeyValue())
+		} else {
+			sort = expression.Key(table.SortKey).Equal(expression.Value(action.GetSortKeyValue()))
+		}
+		expr, err = expression.NewBuilder().WithKeyCondition(hash.And(sort)).Build()
 	} else {
-		sort = expression.Key(table.SortKey).Equal(expression.Value(action.GetSortKeyValue()))
+		expr, err = expression.NewBuilder().WithKeyCondition(hash).Build()
 	}
-	expr, err := expression.NewBuilder().WithKeyCondition(hash.And(sort)).Build()
 	var queryResponse *dynamodb.QueryOutput
 	var data []T
 	if err != nil {
