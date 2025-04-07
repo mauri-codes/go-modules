@@ -32,7 +32,7 @@ func ErrorResponse(input ResponseInput) (events.APIGatewayProxyResponse, error) 
 	out, _ := json.Marshal(LambdaResponse{
 		Message: &input.Message,
 		Success: false,
-		Data:    input.Message,
+		Data:    input.Data,
 	})
 	return events.APIGatewayProxyResponse{Body: string(out), StatusCode: input.Code}, nil
 }
