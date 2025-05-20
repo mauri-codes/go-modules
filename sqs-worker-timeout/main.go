@@ -35,7 +35,7 @@ func CreateSqsWorker(config *Configuration, process *Process) {
 }
 
 type Process struct {
-	ShouldKeepAliveOnTimeOut func(Configuration *Configuration) bool
+	ShouldKeepAliveOnTimeOut func() bool
 	ProcessMessage           func(message types.Message)
 	ShutDownAction           func()
 }
@@ -44,6 +44,4 @@ type Configuration struct {
 	IdleTimeout    int
 	MaxConcurrency int
 	QueueUrl       string
-	TableName      string
-	ServiceName    string
 }

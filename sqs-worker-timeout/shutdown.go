@@ -12,7 +12,7 @@ import (
 
 type SetShutDownConditionsInput struct {
 	Configuration            *Configuration
-	ShouldKeepAliveOnTimeOut func(Configuration *Configuration) bool
+	ShouldKeepAliveOnTimeOut func() bool
 	ShutDownAction           func()
 }
 
@@ -32,7 +32,7 @@ func SetShutDownConditions(input SetShutDownConditionsInput) (*time.Timer, chan 
 		for {
 			select {
 			case <-idleTimer.C:
-				if input.ShouldKeepAliveOnTimeOut(input.Configuration) {
+				if input.ShouldKeepAliveOnTimeOut() {
 					log.Println("Reseting Timeout")
 					idleTimer.Reset(idleTimeoutDuration)
 				} else {
