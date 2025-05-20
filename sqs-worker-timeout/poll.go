@@ -23,12 +23,12 @@ type PollSqsInput struct {
 func PollSqs(input *PollSqsInput) *sync.WaitGroup {
 	log.Println("PollSqs")
 	workerPool := make(chan struct{}, 2*input.Config.MaxConcurrency)
-	var wg *sync.WaitGroup
+	var wg sync.WaitGroup
 	for {
 		select {
 		case <-input.TimeoutCtx.Done():
 			log.Println("Context cancelled, exiting processor loop")
-			return wg
+			return &wg
 		default:
 			log.Println("poll-01")
 			if len(workerPool) >= input.Config.MaxConcurrency {

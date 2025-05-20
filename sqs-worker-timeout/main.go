@@ -28,7 +28,7 @@ func CreateSqsWorker(config *Configuration, process *Process) {
 		ProcessMessage: process.ProcessMessage,
 	})
 	log.Println("Waiting for in-progress workers to complete...")
-	wg.Wait()
+	(*wg).Wait()
 	log.Println("All workers finished. Exiting.")
 	defer cancel()
 	defer idleTimer.Stop()
