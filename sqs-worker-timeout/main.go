@@ -16,6 +16,7 @@ func CreateSqsWorker(config *Configuration, process *Process) {
 	idleTimer, resetChan, timeoutCtx, cancel := SetShutDownConditions(SetShutDownConditionsInput{
 		Configuration:            config,
 		ShouldKeepAliveOnTimeOut: process.ShouldKeepAliveOnTimeOut,
+		ShutDownAction:           process.ShutDownAction,
 	})
 
 	wg := PollSqs(&PollSqsInput{
@@ -36,6 +37,7 @@ func CreateSqsWorker(config *Configuration, process *Process) {
 type Process struct {
 	ShouldKeepAliveOnTimeOut func(Configuration *Configuration) bool
 	ProcessMessage           func(message types.Message)
+	ShutDownAction           func()
 }
 
 type Configuration struct {

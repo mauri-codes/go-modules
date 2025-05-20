@@ -13,6 +13,7 @@ import (
 type SetShutDownConditionsInput struct {
 	Configuration            *Configuration
 	ShouldKeepAliveOnTimeOut func(Configuration *Configuration) bool
+	ShutDownAction           func()
 }
 
 func SetShutDownConditions(input SetShutDownConditionsInput) (*time.Timer, chan struct{}, context.Context, context.CancelFunc) {
@@ -36,6 +37,7 @@ func SetShutDownConditions(input SetShutDownConditionsInput) (*time.Timer, chan 
 					idleTimer.Reset(idleTimeoutDuration)
 				} else {
 					log.Println("Idle timeout reached, shutting down")
+					input.ShutDownAction()
 					cancel()
 					return
 				}
