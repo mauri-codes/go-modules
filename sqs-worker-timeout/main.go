@@ -14,13 +14,17 @@ type SqsWorkerInput struct {
 }
 
 func CreateSqsWorker(input SqsWorkerInput) {
+	log.Println("1")
 	awsContext := GetAwsContext(input.AwsContext)
+	log.Println("2")
 	sqsClient := GetSqsClient(awsContext)
+	log.Println("3")
 	idleTimer, resetChan, timeoutCtx, cancel := SetShutDownConditions(SetShutDownConditionsInput{
 		Configuration:            input.Config,
 		ShouldKeepAliveOnTimeOut: input.Process.ShouldKeepAliveOnTimeOut,
 		ShutDownAction:           input.Process.ShutDownAction,
 	})
+	log.Println("4")
 
 	wg := PollSqs(&PollSqsInput{
 		Config:         input.Config,

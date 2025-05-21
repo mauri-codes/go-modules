@@ -45,7 +45,7 @@ func GetEcsClient(ctx context.Context) *ecs.Client {
 }
 
 func GetAwsContext(parentContext context.Context) context.Context {
-	if parentContext != nil {
+	if parentContext == nil {
 		return context.TODO()
 	}
 	return parentContext
