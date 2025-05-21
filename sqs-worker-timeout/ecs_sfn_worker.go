@@ -130,7 +130,7 @@ func ProcessMessage[SqsMessage any](input *ProcessMessageInput[SqsMessage], ctx 
 	err := json.Unmarshal([]byte(*input.Message.Body), &sqsPayload)
 	log.Println(sqsPayload)
 	if err != nil {
-		log.Println("Could not transform sqs message")
+		log.Printf("Could not transform sqs message %v", err)
 		return
 	}
 	isSuccessful := input.ProcessMessage(sqsPayload.Payload)
