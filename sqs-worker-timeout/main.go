@@ -7,25 +7,28 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
 )
 
-type SqsWorker struct {
+type SqsWorkerInput struct {
+	Config     *Configuration
+	Process    *Process
+	AwsContext context.Context
 }
 
-func CreateSqsWorker(config *Configuration, process *Process) {
-	awsContext := context.TODO()
+func CreateSqsWorker(input SqsWorkerInput) {
+	awsContext := GetAwsContext(input.AwsContext)
 	sqsClient := GetSqsClient(awsContext)
 	idleTimer, resetChan, timeoutCtx, cancel := SetShutDownConditions(SetShutDownConditionsInput{
-		Configuration:            config,
-		ShouldKeepAliveOnTimeOut: process.ShouldKeepAliveOnTimeOut,
-		ShutDownAction:           process.ShutDownAction,
+		Configuration:            input.Config,
+		ShouldKeepAliveOnTimeOut: input.Process.ShouldKeepAliveOnTimeOut,
+		ShutDownAction:           input.Process.ShutDownAction,
 	})
 
 	wg := PollSqs(&PollSqsInput{
-		Config:         config,
+		Config:         input.Config,
 		TimeoutCtx:     timeoutCtx,
 		AwsCtx:         awsContext,
 		SqsClient:      sqsClient,
 		ResetChan:      resetChan,
-		ProcessMessage: process.ProcessMessage,
+		ProcessMessage: input.Process.ProcessMessage,
 	})
 	log.Println("Waiting for in-progress workers to complete...")
 	(*wg).Wait()
