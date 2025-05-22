@@ -108,6 +108,7 @@ type ShutDownActionInput struct {
 
 func ShutDownAction(input ShutDownActionInput, ctx context.Context) {
 	var desiredCount int32 = 0
+	log.Println("Shutdown Action")
 	input.EcsClient.UpdateService(ctx, &ecs.UpdateServiceInput{
 		Service:      &input.Config.ServiceName,
 		Cluster:      &input.Config.ClusterName,
