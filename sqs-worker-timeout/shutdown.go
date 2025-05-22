@@ -23,7 +23,9 @@ func SetShutDownConditions(input SetShutDownConditionsInput) (*time.Timer, chan 
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	idleTimer := time.NewTimer(idleTimeoutDuration)
 	go func() {
-		<-sigs
+		x := <-sigs
+		log.Println(x)
+		log.Println(x.String())
 		log.Println("Shutdown signal received. Stopping message polling...")
 		cancel()
 	}()
