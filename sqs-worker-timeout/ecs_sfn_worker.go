@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sfn"
 	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
 	"github.com/mauri-codes/go-modules/aws/dynamo"
+	ut "github.com/mauri-codes/go-modules/utils"
 )
 
 type EcsSfnConfig struct {
@@ -129,8 +130,11 @@ type SqsPayload[SqsMessage any] struct {
 
 func ProcessMessage[SqsMessage any](input *ProcessMessageInput[SqsMessage], ctx context.Context) {
 	var sqsPayload SqsPayload[SqsMessage]
+	ut.Pr("input")
+	ut.Pr(input)
 	err := json.Unmarshal([]byte(*input.Message.Body), &sqsPayload)
 	log.Println(sqsPayload)
+	ut.Pr(sqsPayload)
 	if err != nil {
 		log.Printf("Could not transform sqs message %v", err)
 		return

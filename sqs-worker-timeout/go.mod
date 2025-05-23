@@ -10,9 +10,11 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sfn v1.35.4
 	github.com/aws/aws-sdk-go-v2/service/sqs v1.38.5
 	github.com/mauri-codes/go-modules/aws/dynamo v0.0.0-20250520030658-1f5fa2c8e2e2
+	github.com/mauri-codes/go-modules/utils v0.0.0-20250522222045-cdb1c0f1fb69
 )
 
 require (
+	github.com/aws/aws-lambda-go v1.47.0 // indirect
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.67 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.18.5 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression v1.7.71 // indirect
