@@ -49,7 +49,8 @@ func CreateSqsWorkerForEcsSfn[SqsMessage any](input SqsWorkerForEcsSfnInput[SqsM
 				}, awsContext)
 			},
 			ProcessMessage: func(message types.Message) {
-				log.Println(message)
+				log.Println("*message.Body")
+				log.Println(*message.Body)
 				ProcessMessage(&ProcessMessageInput[SqsMessage]{
 					StepFunctionsClient: sfnClient,
 					Message:             message,
@@ -135,6 +136,8 @@ func ProcessMessage[SqsMessage any](input *ProcessMessageInput[SqsMessage], ctx 
 	messageBody := sqsInput.Message.Body
 	ut.Pr("input")
 	ut.Pr(sqsInput)
+	log.Println("messageBody")
+	log.Println(messageBody)
 	err := json.Unmarshal([]byte(*messageBody), &sqsPayload)
 	log.Println(sqsPayload)
 	ut.Pr(sqsPayload)
