@@ -130,7 +130,13 @@ type SqsPayload[SqsMessage any] struct {
 
 func ProcessMessage[SqsMessage any](input *ProcessMessageInput[SqsMessage], ProcessFunction func(message SqsMessage) bool, ctx context.Context) {
 	var sqsPayload SqsPayload[SqsMessage]
-	err := json.Unmarshal([]byte(*input.Message.Body), &sqsPayload)
+	sqsInput := *input
+	log.Println("*input")
+	log.Println(sqsInput)
+	body := *sqsInput.Message.Body
+	log.Println("*input")
+	log.Println(body)
+	err := json.Unmarshal([]byte(body), &sqsPayload)
 	log.Println(sqsPayload)
 	ut.Pr(sqsPayload)
 	if err != nil {
