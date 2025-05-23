@@ -54,8 +54,7 @@ func CreateSqsWorkerForEcsSfn[SqsMessage any](input SqsWorkerForEcsSfnInput[SqsM
 				ProcessMessage(&ProcessMessageInput[SqsMessage]{
 					StepFunctionsClient: sfnClient,
 					Message:             message,
-					ProcessMessage:      input.MessageProcess,
-				}, awsContext)
+				}, input.MessageProcess, awsContext)
 			},
 		},
 	})
@@ -122,7 +121,6 @@ func ShutDownAction(input ShutDownActionInput, ctx context.Context) {
 type ProcessMessageInput[SqsMessage any] struct {
 	StepFunctionsClient *sfn.Client
 	Message             types.Message
-	ProcessMessage      func(message SqsMessage) bool
 }
 
 type SqsPayload[SqsMessage any] struct {
@@ -130,22 +128,16 @@ type SqsPayload[SqsMessage any] struct {
 	Payload            SqsMessage
 }
 
-func ProcessMessage[SqsMessage any](input *ProcessMessageInput[SqsMessage], ctx context.Context) {
+func ProcessMessage[SqsMessage any](input *ProcessMessageInput[SqsMessage], ProcessFunction func(message SqsMessage) bool, ctx context.Context) {
 	var sqsPayload SqsPayload[SqsMessage]
-	sqsInput := *input
-	messageBody := sqsInput.Message.Body
-	ut.Pr("input")
-	ut.Pr(sqsInput)
-	log.Println("messageBody")
-	log.Println(messageBody)
-	err := json.Unmarshal([]byte(*messageBody), &sqsPayload)
+	err := json.Unmarshal([]byte(*input.Message.Body), &sqsPayload)
 	log.Println(sqsPayload)
 	ut.Pr(sqsPayload)
 	if err != nil {
 		log.Printf("Could not transform sqs message %v", err)
 		return
 	}
-	isSuccessful := input.ProcessMessage(sqsPayload.Payload)
+	isSuccessful := ProcessFunction(sqsPayload.Payload)
 	if isSuccessful {
 		NotifyStepFunctions(NotifyStepFunctionsInput{
 			Success: true, StepFunctionsClient: input.StepFunctionsClient, Token: sqsPayload.StepFunctionsToken, Output: "{\"success\": true}",
