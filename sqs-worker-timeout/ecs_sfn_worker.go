@@ -49,6 +49,7 @@ func CreateSqsWorkerForEcsSfn[SqsMessage any](input SqsWorkerForEcsSfnInput[SqsM
 				}, awsContext)
 			},
 			ProcessMessage: func(message types.Message) {
+				log.Println(message)
 				ProcessMessage(&ProcessMessageInput[SqsMessage]{
 					StepFunctionsClient: sfnClient,
 					Message:             message,
