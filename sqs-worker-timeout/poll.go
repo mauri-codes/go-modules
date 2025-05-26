@@ -62,9 +62,6 @@ func PollSqs(input *PollSqsInput) *sync.WaitGroup {
 				wg.Add(1)
 				log.Println("poll-04")
 				go func(m types.Message) {
-					log.Println("m")
-					log.Println(*m.Body)
-					log.Println(*msg.Body)
 					input.ProcessMessage(m)
 					log.Println("poll-05")
 					_, err := input.SqsClient.DeleteMessage(input.AwsCtx, &sqs.DeleteMessageInput{

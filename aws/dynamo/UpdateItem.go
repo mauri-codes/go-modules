@@ -34,6 +34,7 @@ func UpdateItem[T any](table *Table, action IItemAction[T]) error {
 		ExpressionAttributeNames:  exp.Names(),
 		ExpressionAttributeValues: exp.Values(),
 		UpdateExpression:          exp.Update(),
+		ConditionExpression:       exp.Condition(),
 		ReturnValues:              types.ReturnValueUpdatedNew,
 	})
 	if err != nil {

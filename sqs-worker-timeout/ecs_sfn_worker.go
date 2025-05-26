@@ -11,7 +11,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sfn"
 	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
 	"github.com/mauri-codes/go-modules/aws/dynamo"
-	ut "github.com/mauri-codes/go-modules/utils"
 )
 
 type EcsSfnConfig struct {
@@ -49,9 +48,7 @@ func CreateSqsWorkerForEcsSfn[SqsMessage any](input SqsWorkerForEcsSfnInput[SqsM
 				}, awsContext)
 			},
 			ProcessMessage: func(message types.Message) {
-				log.Println("*message.Body")
-				log.Println(*message.Body)
-				ProcessMessage(&ProcessMessageInput[SqsMessage]{
+				ProcessMessage(&ProcessMessageInput{
 					StepFunctionsClient: sfnClient,
 					Message:             message,
 				}, input.MessageProcess, awsContext)
@@ -118,7 +115,7 @@ func ShutDownAction(input ShutDownActionInput, ctx context.Context) {
 	})
 }
 
-type ProcessMessageInput[SqsMessage any] struct {
+type ProcessMessageInput struct {
 	StepFunctionsClient *sfn.Client
 	Message             types.Message
 }
@@ -128,17 +125,12 @@ type SqsPayload[SqsMessage any] struct {
 	Payload            SqsMessage
 }
 
-func ProcessMessage[SqsMessage any](input *ProcessMessageInput[SqsMessage], ProcessFunction func(message SqsMessage) bool, ctx context.Context) {
+func ProcessMessage[SqsMessage any](input *ProcessMessageInput, ProcessFunction func(message SqsMessage) bool, ctx context.Context) {
 	var sqsPayload SqsPayload[SqsMessage]
 	sqsInput := *input
-	log.Println("*input")
-	log.Println(sqsInput)
 	body := *sqsInput.Message.Body
-	log.Println("*input")
 	log.Println(body)
 	err := json.Unmarshal([]byte(body), &sqsPayload)
-	log.Println(sqsPayload)
-	ut.Pr(sqsPayload)
 	if err != nil {
 		log.Printf("Could not transform sqs message %v", err)
 		return
